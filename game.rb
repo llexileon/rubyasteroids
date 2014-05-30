@@ -23,6 +23,7 @@ class GameWindow < Gosu::Window
 		@player.move
 		@asteroids.each {|asteroid| asteroid.move}
 		@projectiles.each {|projectile| projectile.move}
+		@projectiles.reject!{|projectile| projectile.dead?}
 		control_player
 		detect_collisions
 	end
