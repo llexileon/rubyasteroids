@@ -14,7 +14,8 @@ class GameWindow < Gosu::Window
 
 	# 60 times per second by default
 	def update
-
+		@player.move
+		
 		control_player
 
 	  if button_down? Gosu::KbQ
@@ -33,6 +34,10 @@ class GameWindow < Gosu::Window
 
 	def control_player
 
+    if button_down? Gosu::KbUp
+      @player.accelerate
+    end
+
 	  if button_down? Gosu::KbLeft
 	    @player.turn_left
 	  end
@@ -40,7 +45,7 @@ class GameWindow < Gosu::Window
 	  if button_down? Gosu::KbRight
 	    @player.turn_right
     end
-    
+
   end  
 
 end	
