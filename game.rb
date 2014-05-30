@@ -51,9 +51,12 @@ class GameWindow < Gosu::Window
   end
 
   def detect_collisions
-    @asteroids.each do |asteroid| 
-      if collision?(asteroid, @player)
-        puts 'kaboom'
+    @projectiles.each do |projectile| 
+      @asteroids.each do |asteroid|
+        if collision?(projectile, asteroid)
+          projectile.kill
+          puts 'hit'
+        end
       end
     end
   end
