@@ -10,6 +10,9 @@ class GameWindow < Gosu::Window
 
 	# 60 times per second by default
 	def update
+		if button_down? Gosu::KbQ
+      close
+    end
 	end
 
 	# This happens immediately after each iteration of the update method
@@ -18,5 +21,5 @@ class GameWindow < Gosu::Window
 	end
 end	
 
-	window = GameWindow.new
-	window.show
+window = GameWindow.new
+window.show
