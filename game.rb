@@ -3,6 +3,8 @@
 require 'gosu'
 require './lib/player'
 require './lib/asteroid'
+require './lib/projectile'
+
 
 
 class GameWindow < Gosu::Window
@@ -12,6 +14,7 @@ class GameWindow < Gosu::Window
     @background_image = Gosu::Image.new(self, "assets/background.png", true)
     @player = Player.new(self)
     @asteroids = [Asteroid.new(self)]
+    @projectiles = []
 
   end
 
@@ -19,22 +22,24 @@ class GameWindow < Gosu::Window
 	def update
 		@player.move
 		@asteroids.each {|asteroid| asteroid.move}
-
+		@projectiles.each {|projectile| projectile.move}
 		control_player
 		detect_collisions
-
-	  if button_down? Gosu::KbQ
-      close
-    end
-
 	end
+
+	def button_down(id)
+		close if id == Gosu::KbQ
+    if id == Gosu::KbSpace
+      @projectiles << Projectile.new(self, @player)
+    end
+  end
 
 	# This happens immediately after each iteration of the update method
 	def draw
 		@background_image.draw(0, 0, 0)
 		@player.draw
 		@asteroids.each {|asteroid| asteroid.draw}
-
+		@projectiles.each {|projectile| projectile.draw}
 	end
  
 	def collision?(object_1, object_2)

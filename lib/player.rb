@@ -1,5 +1,7 @@
 class Player
 
+  attr_accessor :x, :y, :angle
+
   def initialize(window)
   	@image = Gosu::Image.new(window, 'assets/ship.png', false)
   	@velocity_x = @velocity_y = @angle = 0.0
