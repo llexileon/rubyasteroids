@@ -14,7 +14,9 @@ class GameWindow < Gosu::Window
 
 	# 60 times per second by default
 	def update
-	  
+
+		control_player
+
 	  if button_down? Gosu::KbQ
       close
     end
@@ -25,8 +27,21 @@ class GameWindow < Gosu::Window
 	def draw
 		@background_image.draw(0, 0, 0)
 		@player.draw
-		
+
 	end
+
+
+	def control_player
+
+	  if button_down? Gosu::KbLeft
+	    @player.turn_left
+	  end
+
+	  if button_down? Gosu::KbRight
+	    @player.turn_right
+    end
+    
+  end  
 
 end	
 
