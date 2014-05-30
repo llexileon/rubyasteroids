@@ -21,6 +21,7 @@ class GameWindow < Gosu::Window
 		@asteroids.each {|asteroid| asteroid.move}
 
 		control_player
+		detect_collisions
 
 	  if button_down? Gosu::KbQ
       close
@@ -35,7 +36,21 @@ class GameWindow < Gosu::Window
 		@asteroids.each {|asteroid| asteroid.draw}
 
 	end
+ 
+	def collision?(object_1, object_2)
+    hitbox_1, hitbox_2 = object_1.hitbox, object_2.hitbox
+    common_x = hitbox_1[:x] & hitbox_2[:x]
+    common_y = hitbox_1[:y] & hitbox_2[:y]
+    common_x.size > 0 && common_y.size > 0 
+  end
 
+  def detect_collisions
+    @asteroids.each do |asteroid| 
+      if collision?(asteroid, @player)
+        puts 'kaboom'
+      end
+    end
+  end
 
 	def control_player
 

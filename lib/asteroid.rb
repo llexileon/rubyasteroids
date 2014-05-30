@@ -4,7 +4,13 @@ class Asteroid
   def initialize(window)
     @image = Gosu::Image.new(window, 'assets/asteroid-large-1.png', false)
     @x, @y, @angle = rand(640), rand(240), rand(360)
-    @speed_modifier = 2
+    @speed_modifier = 1
+  end
+
+  def hitbox
+  hitbox_x = ((@x - @image.width/2).to_i..(@x + @image.width/2.to_i)).to_a
+  hitbox_y = ((@y - @image.width/2).to_i..(@y + @image.width/2).to_i).to_a
+  {:x => hitbox_x, :y => hitbox_y}
   end
 
   def draw
@@ -17,4 +23,5 @@ class Asteroid
     @x %= 640
     @y %= 480
   end
+
 end
