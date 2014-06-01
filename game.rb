@@ -10,11 +10,27 @@ require './lib/projectile'
 class GameWindow < Gosu::Window
   
   def initialize
+  	# Creating window, setting gamestate and preparing image assets
     super(640, 480, false)
     @game_in_progress = false
     @background_image = Gosu::Image.new(self, "assets/background.png", true)
     @life_image = Gosu::Image.new(self, "assets/ship-life.png", false)
 		@font = Gosu::Font.new(self, "assets/victor-pixel.ttf", 34)
+  	
+  	# Game Soundtrack
+  	@soundtrack = [] 
+  	@soundtrack << Gosu::Song.new("assets/audio/sunriseonmars.mp3")
+    @song = @soundtrack.first
+    @song.play(looping = true)
+
+    # Game Foley
+    @laser_sample = Gosu::Sample.new(self, "assets/audio/laser.mp3")
+		@hit_sample = Gosu::Sample.new(self, "assets/audio/hit.mp3")
+		# @smash_sample = Gosu::Sample.new(self, "assets/audio/smash.mp3")
+		@warp_sample = Gosu::Sample.new(self, "assets/audio/warp.mp3")
+		# @gameover_sample = Gosu::Sample.new(self, "assets/audio/sunriseonmars.mp3")
+  	
+  	# Main titles
   	title_screen
   end
 
@@ -99,6 +115,7 @@ class GameWindow < Gosu::Window
 		close if id == Gosu::KbQ
     if id == Gosu::KbSpace
       @projectiles << Projectile.new(self, @player) unless @player.dead?
+      @laser_sample.play
     end
   end
 
@@ -113,12 +130,14 @@ class GameWindow < Gosu::Window
   	@asteroids.each do |asteroid|
       if collision?(asteroid, @player)
       	@player.kill
+      	@warp_sample.play unless @player.lives < 0
       end
     end  
     @projectiles.each do |projectile| 
       @asteroids.each do |asteroid|
         if collision?(projectile, asteroid)
           projectile.kill
+          @hit_sample.play
           @player.score += asteroid.points
           @asteroids += asteroid.kill
         end
