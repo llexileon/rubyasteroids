@@ -22,7 +22,8 @@ class GameWindow < Gosu::Window
 	def update
 		@player.move
 		@asteroids.each {|asteroid| asteroid.move}
-		@projectiles.each {|projectile| projectile.move}
+		@asteroids.reject!{|asteroid| asteroid.dead?}
+    @projectiles.each {|projectile| projectile.move}
 		@projectiles.reject!{|projectile| projectile.dead?}
 		control_player
 		detect_collisions
@@ -55,6 +56,7 @@ class GameWindow < Gosu::Window
       @asteroids.each do |asteroid|
         if collision?(projectile, asteroid)
           projectile.kill
+          asteroid.kill
           puts 'hit'
         end
       end

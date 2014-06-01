@@ -2,6 +2,7 @@ include Math
 
 class Asteroid
   def initialize(window)
+    @alive = true
     @image = Gosu::Image.new(window, 'assets/asteroid-large-1.png', false)
     @x, @y, @angle = rand(640), rand(240), rand(360)
     @speed_modifier = 1
@@ -22,6 +23,14 @@ class Asteroid
     @y += -@speed_modifier*Math.cos(Math::PI/180*@angle)
     @x %= 640
     @y %= 480
+  end
+
+  def kill
+    @alive = false
+  end
+
+  def dead?
+    !@alive
   end
 
 end
