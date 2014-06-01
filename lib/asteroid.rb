@@ -1,9 +1,11 @@
 include Math
 
 class Asteroid
-  def initialize(window)
+  def initialize(window, size="large")
+    @window = window
+    @size = size
     @alive = true
-    @image = Gosu::Image.new(window, 'assets/asteroid-large-1.png', false)
+    @image = Gosu::Image.new(window, "assets/asteroid-#{size}-1.png", false)
     @x, @y, @angle = rand(640), rand(240), rand(360)
     @speed_modifier = 1
   end
@@ -27,10 +29,31 @@ class Asteroid
 
   def kill
     @alive = false
+    smash
   end
 
   def dead?
     !@alive
+  end
+
+  def smash
+    asteroids = case @size
+      when 'large'
+        speed = 2
+        2.times.collect{Asteroid.new(@window, 'medium')}
+      when 'medium'
+        speed = 2.5
+        2.times.collect{Asteroid.new(@window, 'small')}
+      else
+        []
+      end
+    asteroids.collect {|asteroid| asteroid.setup(@x, @y, rand(0)*speed+0.5) }
+  end
+
+  def setup(x, y, speed)
+    @x, @y, @speed_modifier = x, y, speed
+    @angle = rand(360)
+    self
   end
 
 end

@@ -56,8 +56,7 @@ class GameWindow < Gosu::Window
       @asteroids.each do |asteroid|
         if collision?(projectile, asteroid)
           projectile.kill
-          asteroid.kill
-          puts 'hit'
+          @asteroids += asteroid.kill
         end
       end
     end
