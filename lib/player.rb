@@ -61,5 +61,4 @@ class Player
 	def dead?
 		!@alive
 	end
-
 end

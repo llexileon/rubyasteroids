@@ -39,23 +39,20 @@ class GameWindow < Gosu::Window
 	  if button_down? Gosu::KbQ
       close
     end
-
-    if button_down? Gosu::KbS
+    if button_down? Gosu::KbP
       setup_game unless @game_in_progress
     end
-		
+    if button_down? Gosu::KbM
+      title_screen unless @game_in_progress == false
+      @game_in_progress = false
+    end
 		@asteroids.each {|asteroid| asteroid.move}
 		@asteroids.reject!{|asteroid| asteroid.dead?}
-		
 		return unless @game_in_progress
-		
 		control_player unless @player.dead?
-		
 		@player.move
-		
 		@projectiles.each {|projectile| projectile.move}
 		@projectiles.reject!{|projectile| projectile.dead?}
-		
 		detect_collisions
 		next_level if @asteroids.size == 0 
 	end
@@ -71,11 +68,16 @@ class GameWindow < Gosu::Window
 		@background_image.draw(0, 0, 0)
 		@asteroids.each {|asteroid| asteroid.draw}
 		  unless @game_in_progress
-      @font.draw("ASTEROIDS", 100, 170, 50, 3.0, 3.0, Gosu::Color::rgb(247, 226, 106))
-      @font.draw("press 's' to start", 215, 270, 50, 1, 1, Gosu::Color::rgb(48, 162, 242))
-      @font.draw("press 'q' to quit", 215, 295, 50, 1, 1, Gosu::Color::rgb(48, 162, 242))
-      end
+	      @font.draw("ASTEROIDS", 100, 170, 50, 3.0, 3.0, Gosu::Color::rgb(177, 220, 240))
+	      @font.draw("press 'p' to play", 215, 270, 50, 1, 1, Gosu::Color::rgb(48, 162, 242))
+	      @font.draw("press 'q' to quit", 215, 295, 50, 1, 1, Gosu::Color::rgb(48, 162, 242))
+	    end
       return unless @game_in_progress
+      if @player.lives <= 0
+	      @font.draw("GAME OVER", 100, 170, 50, 3.0, 3.0, Gosu::Color::rgb(242,48,65))
+	      @font.draw("press 'm' for menu", 215, 270, 50, 1, 1, 0xffffffff)
+	      @font.draw("press 'q' to quit", 215, 295, 50, 1, 1, 0xffffffff)
+	    end
 		@player.draw unless @player.dead?
 		@projectiles.each {|projectile| projectile.draw}
 		draw_lives
