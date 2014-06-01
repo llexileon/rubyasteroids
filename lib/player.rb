@@ -4,7 +4,7 @@ class Player
 
   def initialize(window)
   	@alive = true
-  	@lives = 3
+  	@lives = 5
 		@score = 0
   	@image = Gosu::Image.new(window, 'assets/ship.png', false)
   	@velocity_x = @velocity_y = @angle = 0.0
@@ -18,7 +18,7 @@ class Player
 	end
 
   def draw
-    @image.draw_rot(@x, @y, 0, @angle)
+    @image.draw_rot(@x, @y, 40, @angle)
   end
 
   def accelerate
