@@ -47,7 +47,7 @@ class Asteroid
       else
         []
       end
-    asteroids.collect {|asteroid| asteroid.setup(@x, @y, rand(0)*speed+0.5) }
+    asteroids.collect {|asteroid| asteroid.setup(@x, @y, rand(0)*speed+0.3) }
   end
 
   def setup(x, y, speed)

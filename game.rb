@@ -15,35 +15,46 @@ class GameWindow < Gosu::Window
     @player = Player.new(self)
     @asteroids = [Asteroid.new(self)]
     @projectiles = []
-
+    @life_image = Gosu::Image.new(self, "assets/ship-life.png", false)
   end
 
-	# 60 times per second by default
+	# Game loop running 60 times per second by default
 	def update
+		control_player unless @player.dead?
 		@player.move
+		# @player.kill
 		@asteroids.each {|asteroid| asteroid.move}
 		@asteroids.reject!{|asteroid| asteroid.dead?}
     @projectiles.each {|projectile| projectile.move}
 		@projectiles.reject!{|projectile| projectile.dead?}
-		control_player
 		detect_collisions
 	end
+
+	# This happens immediately after each iteration of the update method / game loop
+	def draw
+		@background_image.draw(0, 0, 0)
+		@player.draw unless @player.dead?
+		@asteroids.each {|asteroid| asteroid.draw}
+		@projectiles.each {|projectile| projectile.draw}
+		draw_lives
+	end
+
+  def draw_lives
+	  return unless @player.lives > 0
+	  x = 20
+	  @player.lives.times do 
+	    @life_image.draw(x, 50, 0)
+	    x += 20
+	  end
+  end
 
 	def button_down(id)
 		close if id == Gosu::KbQ
     if id == Gosu::KbSpace
-      @projectiles << Projectile.new(self, @player)
+      @projectiles << Projectile.new(self, @player) unless @player.dead?
     end
   end
 
-	# This happens immediately after each iteration of the update method
-	def draw
-		@background_image.draw(0, 0, 0)
-		@player.draw
-		@asteroids.each {|asteroid| asteroid.draw}
-		@projectiles.each {|projectile| projectile.draw}
-	end
- 
 	def collision?(object_1, object_2)
     hitbox_1, hitbox_2 = object_1.hitbox, object_2.hitbox
     common_x = hitbox_1[:x] & hitbox_2[:x]
@@ -52,6 +63,11 @@ class GameWindow < Gosu::Window
   end
 
   def detect_collisions
+  	@asteroids.each do |asteroid|
+      if collision?(asteroid, @player)
+      	@player.kill
+      end
+    end  
     @projectiles.each do |projectile| 
       @asteroids.each do |asteroid|
         if collision?(projectile, asteroid)
@@ -75,9 +91,7 @@ class GameWindow < Gosu::Window
 	  if button_down? Gosu::KbRight
 	    @player.turn_right
     end
-
   end  
-
 end	
 
 window = GameWindow.new

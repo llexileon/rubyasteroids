@@ -1,18 +1,20 @@
 class Player
 
-  attr_accessor :x, :y, :angle
+  attr_accessor :x, :y, :angle, :lives
 
   def initialize(window)
+  	@alive = true
+  	@lives = 3
   	@image = Gosu::Image.new(window, 'assets/ship.png', false)
   	@velocity_x = @velocity_y = @angle = 0.0
   	@x, @y = 320, 240
   end
 
-  def hitbox
-  hitbox_x = ((@x - @image.width/2).to_i..(@x + @image.width/2.to_i)).to_a
-  hitbox_y = ((@y - @image.width/2).to_i..(@y + @image.width/2).to_i).to_a
-  {:x => hitbox_x, :y => hitbox_y}
-  end
+	def hitbox
+		hitbox_x = ((@x - @image.width/2).to_i..(@x + @image.width/2.to_i)).to_a
+		hitbox_y = ((@y - @image.width/2).to_i..(@y + @image.width/2).to_i).to_a
+		{:x => hitbox_x, :y => hitbox_y}
+	end
 
   def draw
     @image.draw_rot(@x, @y, 0, @angle)
@@ -41,5 +43,22 @@ class Player
   def turn_right
     @angle += 4.5
   end
+
+  def kill
+		@lives -= 1	
+		alive = false
+		return if lives <= 0
+		warp
+	end
+
+	def warp(x=320,y=240)
+		@velocity_x = @velocity_y = @angle = 0.0
+		@x, @y = x, y
+		@alive = true
+	end
+
+	def dead?
+		!@alive
+	end
 
 end
