@@ -78,8 +78,8 @@ class GameWindow < Gosu::Window
 	      @font.draw("press 'm' for menu", 215, 270, 50, 1, 1, 0xffffffff)
 	      @font.draw("press 'q' to quit", 215, 295, 50, 1, 1, 0xffffffff)
 	    end
-		@player.draw unless @player.dead?
-		@projectiles.each {|projectile| projectile.draw}
+		@player.draw unless @player.lives <= 0
+		@projectiles.each {|projectile| projectile.draw} unless @player.lives <= 0
 		draw_lives
 		@font.draw(@player.score, 20, 10, 50, 1.0, 1.0, Gosu::Color::rgb(48, 162, 242))
 		@font.draw("Level: ", 500, 10, 50, 1.0, 1.0, Gosu::Color::rgb(247, 226, 106))
