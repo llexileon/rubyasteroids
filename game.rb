@@ -11,9 +11,11 @@ class GameWindow < Gosu::Window
   
   def initialize
     super(640, 480, false)
+    @level = 1
+    @initial_asteroid_count = 3
     @background_image = Gosu::Image.new(self, "assets/background.png", true)
     @player = Player.new(self)
-    @asteroids = [Asteroid.new(self)]
+    @asteroids = Asteroid.spawn(self, @initial_asteroid_count)
     @projectiles = []
     @life_image = Gosu::Image.new(self, "assets/ship-life.png", false)
 		@font = Gosu::Font.new(self, "assets/victor-pixel.ttf", 34)
@@ -23,12 +25,18 @@ class GameWindow < Gosu::Window
 	def update
 		control_player unless @player.dead?
 		@player.move
-		# @player.kill
 		@asteroids.each {|asteroid| asteroid.move}
 		@asteroids.reject!{|asteroid| asteroid.dead?}
 		@projectiles.each {|projectile| projectile.move}
 		@projectiles.reject!{|projectile| projectile.dead?}
 		detect_collisions
+		next_level if @asteroids.size == 0 
+	end
+
+	def next_level
+		@initial_asteroid_count += 1
+		@level += 1
+		@asteroids = Asteroid.spawn(self, @initial_asteroid_count) 
 	end
 
 	# This happens immediately after each iteration of the update method / game loop
@@ -37,7 +45,8 @@ class GameWindow < Gosu::Window
 		@player.draw unless @player.dead?
 		@asteroids.each {|asteroid| asteroid.draw}
 		@projectiles.each {|projectile| projectile.draw}
-		@font.draw(@player.score, 550, 12, 50, 1.0, 1.0, Gosu::Color::rgb(48, 162, 242))
+		@font.draw(@player.score, 20, 10, 50, 1.0, 1.0, Gosu::Color::rgb(48, 162, 242))
+		@font.draw(@level, 600, 10, 50, 1.0, 1.0, Gosu::Color::rgb(247, 226, 106))
 		draw_lives
 	end
 
@@ -45,7 +54,7 @@ class GameWindow < Gosu::Window
 	  return unless @player.lives > 0
 	  x = 20
 	  @player.lives.times do 
-	    @life_image.draw(x, 20, 50)
+	    @life_image.draw(x, 440, 50)
 	    x += 20
 	  end
   end

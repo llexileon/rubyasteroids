@@ -56,6 +56,10 @@ class Asteroid
     self
   end
 
+  def self.spawn(window, count=3)
+    count.times.collect{Asteroid.new(window)}
+  end
+
   def points
     case @size
     when 'large'
