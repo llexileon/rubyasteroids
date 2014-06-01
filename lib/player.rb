@@ -1,10 +1,11 @@
 class Player
 
-  attr_accessor :x, :y, :angle, :lives
+  attr_accessor :x, :y, :angle, :lives, :score
 
   def initialize(window)
   	@alive = true
   	@lives = 3
+		@score = 0
   	@image = Gosu::Image.new(window, 'assets/ship.png', false)
   	@velocity_x = @velocity_y = @angle = 0.0
   	@x, @y = 320, 240

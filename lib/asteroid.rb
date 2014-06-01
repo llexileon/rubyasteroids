@@ -56,4 +56,16 @@ class Asteroid
     self
   end
 
+  def points
+    case @size
+    when 'large'
+      20
+    when 'medium'
+      50
+    when 'small'
+      100
+    else
+      0
+    end
+  end            
 end

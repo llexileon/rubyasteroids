@@ -16,6 +16,7 @@ class GameWindow < Gosu::Window
     @asteroids = [Asteroid.new(self)]
     @projectiles = []
     @life_image = Gosu::Image.new(self, "assets/ship-life.png", false)
+		@font = Gosu::Font.new(self, "assets/victor-pixel.ttf", 34)
   end
 
 	# Game loop running 60 times per second by default
@@ -25,7 +26,7 @@ class GameWindow < Gosu::Window
 		# @player.kill
 		@asteroids.each {|asteroid| asteroid.move}
 		@asteroids.reject!{|asteroid| asteroid.dead?}
-    @projectiles.each {|projectile| projectile.move}
+		@projectiles.each {|projectile| projectile.move}
 		@projectiles.reject!{|projectile| projectile.dead?}
 		detect_collisions
 	end
@@ -36,6 +37,7 @@ class GameWindow < Gosu::Window
 		@player.draw unless @player.dead?
 		@asteroids.each {|asteroid| asteroid.draw}
 		@projectiles.each {|projectile| projectile.draw}
+		@font.draw(@player.score, 550, 12, 50, 1.0, 1.0, Gosu::Color::rgb(48, 162, 242))
 		draw_lives
 	end
 
@@ -43,7 +45,7 @@ class GameWindow < Gosu::Window
 	  return unless @player.lives > 0
 	  x = 20
 	  @player.lives.times do 
-	    @life_image.draw(x, 50, 0)
+	    @life_image.draw(x, 20, 50)
 	    x += 20
 	  end
   end
@@ -72,6 +74,7 @@ class GameWindow < Gosu::Window
       @asteroids.each do |asteroid|
         if collision?(projectile, asteroid)
           projectile.kill
+          @player.score += asteroid.points
           @asteroids += asteroid.kill
         end
       end
