@@ -4,11 +4,13 @@ require 'gosu'
 require './lib/player'
 require './lib/asteroid'
 require './lib/projectile'
-
+require './lib/audioengine'
 
 
 class GameWindow < Gosu::Window
   
+include AudioEngine
+
   def initialize
   	# Creating window, setting gamestate and preparing image assets
     super(640, 480, false)
@@ -16,25 +18,11 @@ class GameWindow < Gosu::Window
     @background_image = Gosu::Image.new(self, "assets/background.png", true)
     @life_image = Gosu::Image.new(self, "assets/ship-life.png", false)
 		@font = Gosu::Font.new(self, "assets/victor-pixel.ttf", 34)
-  	
-  	# Game Soundtrack
-  	@soundtrack = [] 
-  	@soundtrack << Gosu::Song.new("assets/audio/sunriseonmars.mp3")
-    @song = @soundtrack.first
-    @song.play(looping = true)
-
-    # Game Foley
-    @laser_sample = Gosu::Sample.new(self, "assets/audio/laser.mp3")
-		@hit_sample = Gosu::Sample.new(self, "assets/audio/hit.mp3")
-		# @smash_sample = Gosu::Sample.new(self, "assets/audio/smash.mp3")
-		@warp_sample = Gosu::Sample.new(self, "assets/audio/warp.mp3")
-		# @gameover_sample = Gosu::Sample.new(self, "assets/audio/sunriseonmars.mp3")
-  	
-  	# Main titles
+  	audio_engine
   	title_screen
   end
 
-  def title_screen
+  def title_screen # Main titles
     @asteroids = Asteroid.spawn(self, 4)
     @asteroids += @asteroids[0].kill
     @asteroids += @asteroids[1].kill
