@@ -29,7 +29,7 @@ class Asteroid
 
   def kill
     @alive = false
-    smash
+    self.reject
   end
 
   def dead?
